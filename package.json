@@ -1,0 +1,23 @@
+{
+  "name": "magic-query-builder",
+  "version": "1.0.0",
+  "description": "Magic Query Builder: A Full-Stack Application using the MERN stack (MongoDB, Express, React and Nodejs)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Vanshul Kesharwani",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
