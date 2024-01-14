@@ -87,7 +87,7 @@ const userController = {
 
         try {
             // Check if the user with the provided ID exists
-            const user = await User.findById(userId, { _id: 1, username: 1 }); // Only select _id and username.
+            const user = await User.findById(userId, { password: 0 }); // excluding the password field
 
             if (!user) return res.status(404).json({ success: false, message: 'The requested user was not found.' });
 

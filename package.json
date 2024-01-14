@@ -1,6 +1,6 @@
 {
   "name": "magic-query-builder",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Magic Query Builder: A Full-Stack Application using the MERN stack (MongoDB, Express, React and Nodejs)",
   "main": "app.js",
   "scripts": {

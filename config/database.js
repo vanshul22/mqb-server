@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Replace <username>, <password>, <cluster-name>, and <database-name> with your actual MongoDB Atlas credentials
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI || "mongodb://vanshul22:1234567890@localhost:27017";
 
 const connectDB = async () => {
   try {
