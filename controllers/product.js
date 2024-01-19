@@ -1,9 +1,12 @@
-const Product = require('../models/Product');
+const { Product } = require('../models/product');
 
 const productController = {
     createProduct: async (req, res) => {
         // Create a new product in the database
         const { name, price, category, brand } = req.body;
+
+        // Validate the request body
+        if (!name || !price || !category || !brand) return res.status(400).json({ error: 'Invalid request body' });
 
         try {
             // Check if the product name already exists in the database
@@ -65,38 +68,22 @@ const productController = {
         const productId = req.params.id;
         const { name, price, category, brand } = req.body;
 
+        // Validate the request body
+        if (!name || !price || !category || !brand) return res.status(400).json({ error: 'Invalid request body' });
+
         try {
             // Check if the product with the given ID exists in the database
-            const existingProduct = await Product.findById(productId);
+            const existingProduct = await Product.findByIdAndUpdate(productId, { name, price, category, brand }, { new: true });
 
             // Product does not exist
             if (!existingProduct) return res.status(404).json({ success: false, message: 'Product not found' });
 
-            // Check if the updated product name already exists in the database (excluding the current product)
-            if (name !== existingProduct.name) {
-                const productWithUpdatedName = await Product.findOne({ name });
-
-                // Product name already in use
-                if (productWithUpdatedName) return res.status(400).json({ success: false, message: 'Product name already in use' });
-            }
-
-            // Update the product in the database
-            existingProduct.name = name;
-            existingProduct.price = price;
-            existingProduct.category = category;
-            existingProduct.brand = brand;
-
-            const updatedProduct = await existingProduct.save();
-
-            // Product updated successfully 
-            if (updatedProduct) return res.status(200).json({ success: true, message: 'Product updated successfully' });
-            // Failed to update product
-            else return res.status(500).json({ success: false, message: 'Failed to update product' });
+            return res.status(200).json({ success: true, message: 'Product updated successfully' })
 
         } catch (error) {
             // Handle database errors or other exceptions
-            console.error(error);
-            res.status(500).json({ success: false, message: 'Internal Server Error' });
+            // console.error(error);
+            res.status(500).json({ success: false, message: error.codeName });
         }
     },
 
@@ -105,12 +92,9 @@ const productController = {
 
         try {
             // Check if the product with the provided ID exists
-            const product = await Product.findById(productId);
+            const deletedProduct = await Product.findByIdAndDelete(productId);
 
-            if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-
-            // Delete the product from the database
-            await Product.findByIdAndDelete(productId);
+            if (!deletedProduct) return res.status(404).json({ success: false, message: 'Product not found' })
 
             // Use a 204 status code for a successful deletion (No Content)
             res.status(204).send({ success: true, message: "Successfully Deleted." });
@@ -118,7 +102,7 @@ const productController = {
         } catch (error) {
             // Handle database errors or other exceptions
             console.error(error);
-            res.status(500).json({ success: false, message: 'Internal Server Error' });
+            res.status(500).json({ success: false, message: "Internal Server Error" });
         }
     },
 };

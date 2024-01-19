@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const  mongoose = require('mongoose');
+const { productSchema } = require('./product');
+
 
 const orderSchema = new mongoose.Schema({
     status: {
@@ -6,6 +8,7 @@ const orderSchema = new mongoose.Schema({
         enum: ['pending', 'completed', 'shipped', 'cancelled'],
         default: 'pending',
     },
+    products: [productSchema], // Assuming an array of products in each order
     createdAt: {
         type: Date,
         default: Date.now,
@@ -26,5 +29,4 @@ orderSchema.pre('save', function (next) {
 });
 
 const Order = mongoose.model('Order', orderSchema);
-
-module.exports = Order;
+module.exports = { orderSchema, Order };

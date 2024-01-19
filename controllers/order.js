@@ -1,21 +1,20 @@
-const Order = require('../models/order');
+const { Order } = require('../models/order');
 
 // Controller methods for order routes
 const orderController = {
     createOrder: async (req, res) => {
         // Create a new order in the database
-        const { userId, productId, status } = req.body;
+        const { status, products } = req.body;
 
         try {
-            // Check if an order already exists for the same user
-            const existingOrder = await Order.findOne({ userId, productId });
 
-            if (existingOrder) return res.status(400).json({ success: false, message: 'An order already exists for the User' });
+            // Validate the request body
+            if (!status || !products || !Array.isArray(products)) return res.status(400).json({ success: false, message: 'Invalid request body' });
 
             // Insert a new order into the database
-            const newOrder = new Order({ status });
-            const savedOrder = await newOrder.save();
+            const newOrder = new Order({ status, products });
 
+            const savedOrder = await newOrder.save();
             res.status(201).json({ success: true, message: 'Order created successfully', order: savedOrder });
 
         } catch (error) {
@@ -61,29 +60,19 @@ const orderController = {
     },
     updateOrder: async (req, res) => {
         const orderId = req.params.id;
-        const { userId, productId, status } = req.body;
+        const { status, products } = req.body;
 
         try {
-            // Check if the order with the given ID exists in the database
-            const existingOrder = await Order.findById(orderId);
+            // Validate the request body
+            if (!status || !products || !Array.isArray(products)) return res.status(400).json({ success: false, message: 'Invalid request body' });
 
-            // Order does not exist
-            if (!existingOrder) return res.status(404).json({ success: false, message: 'Order not found' });
+            const updatedOrder = await Order.findByIdAndUpdate(orderId, { status, products }, { new: true });
 
-            // Order name already in use
-            if (status === existingOrder.status) return res.status(400).json({ success: false, message: 'Order Status already in use' });
-
-            // Update the order in the database
-            // existingOrder.userId = userId;
-            // existingOrder.productId = productId;
-            existingOrder.status = status;
-
-            const updatedOrder = await existingOrder.save();
+            // Failed to update order
+            if (!updatedOrder) return res.status(404).json({ success: false, message: 'Failed to update order' });
 
             // Order updated successfully 
-            if (updatedOrder) return res.status(200).json({ success: true, message: 'Order updated successfully' });
-            // Failed to update order
-            else return res.status(500).json({ success: false, message: 'Failed to update order' });
+            return res.status(200).json({ success: true, message: 'Order updated successfully' });
 
         } catch (error) {
             // Handle database errors or other exceptions
@@ -96,12 +85,9 @@ const orderController = {
 
         try {
             // Check if the order with the provided ID exists
-            const order = await Order.findById(orderId);
+            const deletedOrder = await Order.findByIdAndDelete(orderId);
 
-            if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-
-            // Delete the order from the database
-            await Order.findByIdAndDelete(orderId);
+            if (!deletedOrder) return res.status(404).json({ success: false, message: 'Order not found' });
 
             // Use a 204 status code for a successful deletion (No Content)
             res.status(204).send({ success: true, message: "Successfully Deleted." });

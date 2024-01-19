@@ -13,3 +13,5 @@ yarn-error.log*
 
 # Environment variables
 .env
+/*.env
+Magic_Query_Builder_Postman.json
