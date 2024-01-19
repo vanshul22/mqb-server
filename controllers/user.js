@@ -10,7 +10,7 @@ const userController = {
         const { username, email, password, orders } = req.body;
 
         // Validate the request body
-        if (!username || !email || !password || !Array.isArray(orders)) return res.status(400).json({ success: false, error: 'Invalid request body' });
+        if (!username || !email || !password || !Array.isArray(orders)) return res.status(400).json({ success: false, message: 'Invalid request body' });
 
         try {
             // Check if the username and email already exist in the database concurrently
@@ -124,7 +124,7 @@ const userController = {
         const userId = req.params.id;
 
         // Validate the request body
-        if (!userId || !username || !email || !password || !Array.isArray(orders)) return res.status(400).json({ success: false, error: 'Invalid request body' });
+        if (!userId || !username || !email || !password || !Array.isArray(orders)) return res.status(400).json({ success: false, message: 'Invalid request body' });
 
         try {
             // Check if the user with the given ID exists in the database

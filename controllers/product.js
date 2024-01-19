@@ -6,7 +6,7 @@ const productController = {
         const { name, price, category, brand } = req.body;
 
         // Validate the request body
-        if (!name || !price || !category || !brand) return res.status(400).json({ error: 'Invalid request body' });
+        if (!name || !price || !category || !brand) return res.status(400).json({ message: 'Invalid request body' });
 
         try {
             // Check if the product name already exists in the database
@@ -69,7 +69,7 @@ const productController = {
         const { name, price, category, brand } = req.body;
 
         // Validate the request body
-        if (!name || !price || !category || !brand) return res.status(400).json({ error: 'Invalid request body' });
+        if (!name || !price || !category || !brand) return res.status(400).json({ message: 'Invalid request body' });
 
         try {
             // Check if the product with the given ID exists in the database
